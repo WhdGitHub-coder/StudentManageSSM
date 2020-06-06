@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" id="WebApp_ID" version="2.5">
+  
+  	<!-- 中文乱码处理 -->
+  	<filter>
+  		<filter-name>CharacterEncodingFilter</filter-name>
+  		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+  	
+  		<init-param>
+  			<param-name>encoding</param-name>
+  			<param-value>UTF-8</param-value>
+  		</init-param>
+  		<init-param>
+  			<param-name>forceEncoding</param-name>
+  			<param-value>true</param-value>
+  		</init-param>
+  	</filter>
+  	
+  	<filter-mapping>
+  		<filter-name>CharacterEncodingFilter</filter-name>
+  		<url-pattern>/*</url-pattern>
+  	</filter-mapping>
+  	
+  	
+  	
+  	<filter>
+  		<filter-name>HiddenHttpMethodFilter</filter-name>
+  		<filter-class>org.springframework.web.filter.HiddenHttpMethodFilter</filter-class>
+  	</filter>
+  	
+  	<filter-mapping>
+  		<filter-name>HiddenHttpMethodFilter</filter-name>
+  		<url-pattern>/*</url-pattern>
+  	</filter-mapping>
+  
+  
+  
+  	<!-- Spring配置文件信息   contextConfigLocation是个名字，可以随便写-->
+  	<!-- 指定ioc容器（applicationContext.xml）的位置  下面表示路径classpath为src目录下的config/spring/applicationContext.xml文件-->
+  	<!-- 如果位置在WEB-INF中，可以不用指定 -->
+  	<context-param>
+  		<param-name>contextConfigLocation</param-name>
+  		<param-value>classpath:config/spring/applicationContext.xml</param-value>
+  	</context-param>
+  	
+  	<!-- ContextLoaderListener监听器 -->
+  	<!-- ctrl+shift+t搜索contextloadlistener，他的jar就在spring-web.jar -->
+  	<!-- 配置spring-web.jar提供的监听器，此监听器可以在服务器启动时初始化ioc容器
+  		两个方法： 1.告诉监听器 此容器的位置：context-param
+  			2.默认约定的位置	:WEB-INF/applicationContext.xml -->
+  	<listener>
+  	<!-- 监听哪个类，然后调用里面的方法 -->
+  		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  	</listener>
+  	
+  	
+  	
+  	<!-- 日志配置 -->
+	  <context-param>
+	   <param-name>log4jConfigLocation</param-name>
+	   <param-value>classpath:config/log4j.properties</param-value>
+	</context-param>
+	<listener>
+	   <listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
+	</listener>
+  
+  
+  
+  
+  	<!-- 配置前端控制器 -->
+	<servlet>
+		<!-- org.springframework.web.servlet.DispatcherServlet表示拦截一切请求后转移到这个servlet，交给springMVC处理，这个是MVC的一个入口 -->
+		<servlet-name>DispatcherServlet</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+	
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>classpath:config/springmvc/springmvc.xml</param-value>
+		</init-param>
+		 
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>DispatcherServlet</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+
+	<!-- 定义因为404 500错误跳转哪个页面 -->
+	<error-page>
+		<error-code>404</error-code>
+		<location>/WEB-INF/errors/404.jsp</location>
+	</error-page>
+
+	<error-page>
+		<error-code>500</error-code>
+		<location>/WEB-INF/errors/500.jsp</location>
+	</error-page>
+  
+	  <welcome-file-list>
+	    <welcome-file>index.jsp</welcome-file>
+	  </welcome-file-list>
+  
+</web-app>

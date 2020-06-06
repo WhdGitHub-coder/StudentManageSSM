@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<!DOCTYPE mapper  
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.itwh.ssmproject.dao.StudentDao">
+	<!-- #{}：占位符号，可以防止sql注入（替换结果会增加单引号‘’） -->
+    <!-- ${}：sql拼接符号（替换结果不会增加单引号‘’，like和order by后使用，存在sql注入问题，需手动代码中过滤） -->
+	<select id="findByUserName" parameterType="String" resultType="Student">
+		select * from student where username = #{username}
+	</select>
+	<select id="findList" parameterType="Map" resultType="Student">
+	<!-- 从一个偏移量offset拿几条数据pageSize -->
+		select * from student where 1=1
+		<if test="username !=null">
+			and username like #{username}
+		</if>
+		<if test="clazzId !=null">
+			and clazzId like #{clazzId}
+		</if>
+	     limit #{offset},#{pageSize}
+	</select>
+	<select id="findAll"  resultType="Student">
+	<!-- 从一个偏移量offset拿几条数据pageSize -->
+		select * from student 
+	</select>
+	
+	<select id="getTotal" parameterType="Map" resultType="Integer">
+		select count(id) from student where 1=1
+		<if test="username !=null">
+			and username like #{username}
+		</if>
+		<if test="clazzId !=null">
+			and clazzId like #{clazzId}
+		</if>
+	</select>
+
+	<update id="add" parameterType="Student">
+		insert into student(id,sn,clazzId,username,password,sex,photo,remark) values(null,#{sn},#{clazzId},#{username},#{password},#{sex},#{photo},#{remark})
+	</update>
+	
+	<update id="edit" parameterType="Student">
+		update student set username = #{username},clazzId=#{clazzId},password=#{#password},sex=#{sex},photo=#{#photo},remark = #{remark} where id=#{id}
+	</update>
+	
+	<update id="delete" parameterType="String">
+		delete from student where id in (${value})
+	</update>
+
+</mapper>
